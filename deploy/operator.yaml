@@ -1,0 +1,33 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: victoria-metrics-operator
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      name: victoria-metrics-operator
+  template:
+    metadata:
+      labels:
+        name: victoria-metrics-operator
+    spec:
+      serviceAccountName: victoria-metrics-operator
+      containers:
+        - name: victoria-metrics-operator
+          # Replace this with the built image name
+          image: REPLACE_IMAGE
+          command:
+          - victoria-metrics-operator
+          imagePullPolicy: Always
+          env:
+            - name: WATCH_NAMESPACE
+              valueFrom:
+                fieldRef:
+                  fieldPath: metadata.namespace
+            - name: POD_NAME
+              valueFrom:
+                fieldRef:
+                  fieldPath: metadata.name
+            - name: OPERATOR_NAME
+              value: "victoria-metrics-operator"
